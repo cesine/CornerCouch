@@ -43,7 +43,7 @@ factory('cornercouch', ['$http', function($http) {
             var config = {
                 method: getMethod,
                 url:    encodeUri(dbUri, id || this._id)
-            }
+            };
             if (docParams) config.params = docParams;
             
             var doc = this;
@@ -51,7 +51,7 @@ factory('cornercouch', ['$http', function($http) {
             return $http(extendJSONP(config)).success( function (data) {
                 ng.copy(data, doc);
             });
-        }
+        };
 
         CouchDoc.prototype.save = function() {
 
@@ -60,12 +60,12 @@ factory('cornercouch', ['$http', function($http) {
                 config = { 
                     method: "PUT" ,
                     url:    encodeUri(dbUri, this._id)
-                }
+                };
             else
                 config = {
                     method: "POST",
                     url:    dbUri 
-                }
+                };
             
             var doc = config.data = this;
 
@@ -73,7 +73,7 @@ factory('cornercouch', ['$http', function($http) {
                 if (data.id)  doc._id  = data.id;
                 if (data.rev) doc._rev = data.rev;
             });
-        }
+        };
 
         CouchDoc.prototype.remove = function() {
 
@@ -82,7 +82,7 @@ factory('cornercouch', ['$http', function($http) {
                 url:    encodeUri(dbUri, this._id),
                 params: { rev: this._rev }
             });
-        }
+        };
 
         // Requires File-API 'file', sorry IE9
         CouchDoc.prototype.attach = function(file, name) {
@@ -100,7 +100,7 @@ factory('cornercouch', ['$http', function($http) {
                 // Reload document for local consistency
                 doc.load();
             });
-        }
+        };
         
         CouchDoc.prototype.detach = function(name) {
 
@@ -115,11 +115,11 @@ factory('cornercouch', ['$http', function($http) {
                 // Reload document for local consistency
                 doc.load();
             });
-        }
+        };
 
         CouchDoc.prototype.attachUri = function (attachName) {
             return encodeUri(dbUri, this._id, attachName);
-        }
+        };
 
         // Document constructor
         this.docClass = CouchDoc;
@@ -138,7 +138,7 @@ factory('cornercouch', ['$http', function($http) {
 
         return new this.docClass(initData);
 
-    }
+    };
 
     CouchDB.prototype.getDoc = function(id) {
 
@@ -146,7 +146,7 @@ factory('cornercouch', ['$http', function($http) {
         doc.load(id);
         return doc;
     
-    }
+    };
 
     CouchServer.prototype.getInfo = function () {
         
@@ -158,7 +158,7 @@ factory('cornercouch', ['$http', function($http) {
         .success(function(data) {
             db.info = data;
         });
-    }
+    };
     
     CouchDB.prototype.getQueryDoc = function(idx) {
 
@@ -173,7 +173,7 @@ factory('cornercouch', ['$http', function($http) {
         doc = this.newDoc(doc);
         row.doc = doc;
         return doc;
-    }
+    };
     
     function executeQuery(db) {
         
@@ -216,7 +216,7 @@ factory('cornercouch', ['$http', function($http) {
 
         this.qConfig = extendJSONP(config);
         return executeQuery(this);
-    }
+    };
 
     CouchDB.prototype.query = function(design, view, qparams)
     {
@@ -225,17 +225,17 @@ factory('cornercouch', ['$http', function($http) {
             "/_view/"   + encodeURIComponent(view),
             qparams
         );
-    }
+    };
 
     CouchDB.prototype.queryAll = function(qparams)
     {
-        return this.queryView("/_all_docs", qparams)
-    }
+        return this.queryView("/_all_docs", qparams);
+    };
 
     CouchDB.prototype.queryRefresh = function()
     {
        return executeQuery(this);
-    }
+    };
 
     CouchDB.prototype.queryNext = function()
     {
@@ -248,7 +248,7 @@ factory('cornercouch', ['$http', function($http) {
             return executeQuery(this);
         }
         else return null;
-    }
+    };
 
     CouchDB.prototype.queryPrev = function() {
         var row = this.prevRows.pop();
@@ -259,7 +259,7 @@ factory('cornercouch', ['$http', function($http) {
             return executeQuery(this);
         }
         else return null;
-    }
+    };
     
     function CouchServer(url, getMethod) {
         if (url) {
@@ -270,17 +270,17 @@ factory('cornercouch', ['$http', function($http) {
             this.uri = "";
             this.method = "GET";
         }         
-    }
+    };
 
     CouchServer.prototype.getDB = function(dbName) {
         return new CouchDB(dbName, this.uri, this.method);
-    }
+    };
     
     CouchServer.prototype.getUserDB = function() {
         if (!this.userDB)
             this.userDB = this.getDB("_users");
         return userDB;
-    }
+    };
     
     CouchServer.prototype.getUserDoc = function () {
         var db = this.getUserDB();
@@ -289,7 +289,7 @@ factory('cornercouch', ['$http', function($http) {
         else
             this.userDoc = db.newDoc();
         return this.userDoc;
-    }
+    };
     
     CouchServer.prototype.getDatabases = function () {
         
@@ -301,7 +301,7 @@ factory('cornercouch', ['$http', function($http) {
         .success(function(data) {
             server.databases = data;
         });
-    }
+    };
     
     CouchDB.prototype.createDB = function(dbName) {
         var server = this;
@@ -312,7 +312,7 @@ factory('cornercouch', ['$http', function($http) {
         .success(function () {
             if (server.databases) server.databases.push(dbName);
         });
-    }
+    };
 
     CouchServer.prototype.session = function() {
         
@@ -324,7 +324,7 @@ factory('cornercouch', ['$http', function($http) {
         .success(function(data) {
             server.userCtx = data.userCtx;
         });
-    }
+    };
 
     CouchServer.prototype.login = function(usr, pwd) {
         
@@ -345,7 +345,7 @@ factory('cornercouch', ['$http', function($http) {
             server.userCtx = data;
         });
 
-    }
+    };
 
     CouchServer.prototype.logout = function() {
         
@@ -357,7 +357,7 @@ factory('cornercouch', ['$http', function($http) {
         .success(function() {
             server.userCtx = { name: null, roles: [] };
         });
-    }
+    };
     
     CouchServer.prototype.getUUIDs = function (cnt) {
         
@@ -370,11 +370,11 @@ factory('cornercouch', ['$http', function($http) {
         .success(function(data) {
             server.uuids = data.uuids;
         });
-    }
+    };
 
     // This is 'cornercouch' - a factory for CouchServer objects
     return function (url, method) {
         return new CouchServer(url, method);
-    }
+    };
 
-}])
+}]);
